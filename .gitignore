@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Cache files (regenerated on each run)
+results/edgar_data_cache.parquet
+results/fmp_data_cache.parquet
+results/real_data_sample.csv
+results/inversion_table.csv
