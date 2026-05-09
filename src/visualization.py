@@ -34,14 +34,18 @@ def plot_fragility_by_source(df_with_bins, decomp_summary, output_dir=RESULTS_DI
                 edgecolor="black", linewidth=0.5)
     axes[1].set_title("Inversion Rate by CAC Source Bin")
     axes[1].set_ylabel("Fraction Inverted")
-    axes[1].yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1, decimals=1))
+    axes[1].yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1, decimals=2))
     axes[1].tick_params(axis="x", rotation=15)
+    # Proportional annotation offset (5% of max bar height, min 0.0001)
+    max_inv = max(decomp_summary["inversion_rate"].max(), 0.0001)
+    offset = max_inv * 0.08
     for i, (_, row) in enumerate(decomp_summary.iterrows()):
-        axes[1].text(i, row["inversion_rate"] + 0.005, f"{row['inversion_rate']:.1%}",
+        axes[1].text(i, row["inversion_rate"] + offset,
+                     f"{row['inversion_rate']:.2%}",
                      ha="center", va="bottom", fontsize=9, fontweight="bold")
-    plt.suptitle("Hypothesis 1: Decomposition Fragility Under 30% CAC Shock",
-                 fontsize=14, fontweight="bold", y=1.02)
-    plt.tight_layout()
+    fig.suptitle("Hypothesis 1: Decomposition Fragility Under 30% CAC Shock",
+                 fontsize=14, fontweight="bold")
+    fig.tight_layout(rect=[0, 0, 1, 0.95])
     path = output_dir / "fragility_by_source.png"
     fig.savefig(path, bbox_inches="tight"); plt.close(fig)
     print(f"  Saved: {path}"); return path
@@ -65,8 +69,8 @@ def plot_signal_comparison(signal_df, output_dir=RESULTS_DIR):
     axes[1].yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1))
     for bar, v in zip(b2, overall["top_quartile_precision"].values):
         axes[1].text(bar.get_x()+bar.get_width()/2, v+0.02, f"{v:.1%}", ha="center", fontweight="bold")
-    plt.suptitle("Hypothesis 2: Signal Predictive Power Under Stress", fontsize=14, fontweight="bold", y=1.02)
-    plt.tight_layout()
+    fig.suptitle("Hypothesis 2: Signal Predictive Power Under Stress", fontsize=14, fontweight="bold")
+    fig.tight_layout(rect=[0, 0, 1, 0.95])
     path = output_dir / "signal_comparison.png"
     fig.savefig(path, bbox_inches="tight"); plt.close(fig)
     print(f"  Saved: {path}"); return path
